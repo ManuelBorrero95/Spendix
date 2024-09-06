@@ -45,7 +45,8 @@ router.get('/auth/google/callback',
     const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
-    res.redirect(`http://localhost:5000/login?token=${token}`);
+    //res.redirect(`http://localhost:5000/login?token=${token}`);
+    res.redirect(`http://localhost:5174/dashboard?token=${token}`);
   });
 
 module.exports = router;

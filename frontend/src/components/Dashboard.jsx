@@ -1,12 +1,29 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const token = queryParams.get('token');
+    
+    if (token) {
+      localStorage.setItem('token', token);
+      navigate('/dashboard', { replace: true }); // Rimuove il token dall'URL
+    }
+    
+    // Verifica se l'utente è autenticato
+    const storedToken = localStorage.getItem('token');
+    if (!storedToken) {
+      navigate('/login');
+    }
+  }, [location, navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login');
+    navigate('/');
   };
 
   return (
