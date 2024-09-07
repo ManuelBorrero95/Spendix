@@ -43,4 +43,4 @@ userSchema.methods.correctPassword = async function(candidatePassword, userPassw
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+module.exports = User; 
