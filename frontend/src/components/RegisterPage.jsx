@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
+const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const RegisterPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -20,7 +22,8 @@ const RegisterPage = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/register', {
+      //const response = await axios.post('http://localhost:5000/api/register', {
+        const response = await axios.post( `${BACKEND_URL}/api/register`, {  
         name,
         email,
         password
