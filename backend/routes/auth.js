@@ -4,6 +4,7 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5174'
 // Registration route
 router.post('/register', async (req, res) => {
   try {
@@ -44,9 +45,8 @@ router.get('/auth/google/callback',
   (req, res) => {
     const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
-    });
-    //res.redirect(`http://localhost:5000/login?token=${token}`);
-    res.redirect(`http://localhost:5174/dashboard?token=${token}`);
+    });    
+    res.redirect(`${FRONTEND_URL}/dashboard?token=${token}`);
   });
 
 module.exports = router;
