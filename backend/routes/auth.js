@@ -8,7 +8,7 @@ dotenv.config();
 
 const router = express.Router();
 
-const FRONTEND_URL =  process.env.BACKEND_URL || 'http://localhost:5173';
+const FRONTEND_URL =  process.env.FRONTEND_URL || 'http://localhost:5173';
 
 router.get('/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
