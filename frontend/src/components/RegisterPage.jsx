@@ -22,8 +22,7 @@ const RegisterPage = () => {
     }
 
     try {
-      //const response = await axios.post('http://localhost:5000/api/register', {
-        const response = await axios.post( `${BACKEND_URL}/api/register`, {  
+      const response = await axios.post(`${BACKEND_URL}/api/register`, {  
         name,
         email,
         password

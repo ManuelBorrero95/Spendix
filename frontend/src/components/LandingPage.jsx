@@ -13,7 +13,7 @@ const LandingPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setStartTyping(true);
-    }, 3000);
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -26,7 +26,7 @@ const LandingPage = () => {
     } else if (typedText === fullText) {
       setTimeout(() => {
         setShowButton(true);
-      }, 1000);
+      }, 400);
     }
   }, [typedText, startTyping]);
 

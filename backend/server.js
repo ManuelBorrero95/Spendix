@@ -1,12 +1,16 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const session = require('express-session');
-require('dotenv').config();
+import express, { application } from 'express';
+import mongoose from 'mongoose';
+import passport from './config/passport.js'
+import session from 'express-session';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import authRoutes from './routes/auth.js';
+import userRoutes from './routes/user.js';
+import registerRoutes from './routes/register.js';
 
-const passport = require('./config/passport');
-const authRoutes = require('./routes/auth');
-const registerRoutes = require('./routes/register');
+
+dotenv.config();
+
 const app = express();
 
 // NEW! Configurazione CORS
@@ -36,8 +40,10 @@ const corsOptions = {
 };
 
 // Middleware
-app.use(cors(corsOptions));
 app.use(express.json());
+
+
+app.use(cors(corsOptions));
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -47,17 +53,25 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // MongoDB connection
-const dbURI = process.env.MONGODB_URI;
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.error('Could not connect to MongoDB', err));
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // Routes
-app.use('/api', authRoutes);
-app.use('/register', registerRoutes);
 
+app.use('/api/auth', authRoutes);
+app.use('/api', userRoutes);
+app.use('/api/',registerRoutes);
+app.use('/api/',userRoutes);
+
+
+
+
+
+// Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
-module.exports = app;
-
+export default app;
