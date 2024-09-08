@@ -20,6 +20,7 @@ router.get('/google/callback',
     const token = jwt.sign({ id: req.user.id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN
     });
+    console.log('Token generato:', token);
     console.log(`${FRONTEND_URL}/dashboard?token=${token}`);
     res.redirect(`${FRONTEND_URL}/dashboard?token=${token}`);
   }

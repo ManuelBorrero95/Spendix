@@ -12,10 +12,16 @@ const Dashboard = () => {
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get('token');
-    
+    console.log('Token ricevuto:', token);
+
     if (token) {
-      localStorage.setItem('token', token);
+      localStorage.setItem('token', token);      
+      console.log('Token salvato:', token);
       navigate('/dashboard', { replace: true }); // Rimuove il token dall'URL
+
+    }
+    else{
+      console.log('Nessun token trovato nell\'URL');
     }
     
     // Verifica se l'utente è autenticato
