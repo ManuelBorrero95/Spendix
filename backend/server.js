@@ -44,6 +44,12 @@ app.use(express.json());
 
 
 app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+  console.log(`Richiesta ricevuta: ${req.method} ${req.path}`);
+  next();
+});
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -63,9 +69,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api/',registerRoutes);
 app.use('/api/',userRoutes);
-
-
-
 
 
 // Start server
