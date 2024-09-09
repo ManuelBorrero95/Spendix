@@ -10,6 +10,7 @@ import registerRoutes from './routes/register.js';
 import Category from './models/Category.js';
 import Balance from './models/Balance.js';
 import Transaction from './models/Transaction.js'
+//import User from './models/User.js'; 
 import User from './models/User.js';
 
 
