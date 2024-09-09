@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Footer from './Footer';
+import Footer from '../components/Footer';
 
 const LandingPage = () => {
   const [typedText, setTypedText] = useState('');
@@ -35,7 +35,7 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-black text-white transition-colors duration-1000">
+    <div className="min-h-screen flex flex-col bg-[#001845] text-white transition-colors duration-1000">
       <main className="flex-1 flex flex-col items-center justify-center p-8">
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold whitespace-pre-line">{typedText}</h1>
@@ -43,7 +43,7 @@ const LandingPage = () => {
         
         {showButton && (
           <button 
-            className="bg-[#2C66C9] text-white py-2 px-4 rounded-lg hover:bg-opacity-80 transition duration-300"
+            className="bg-[#0466C8] text-white py-2 px-4 rounded-lg hover:bg-opacity-80 transition duration-300"
             onClick={handleStartClick}
           >
             Iniziamo!
@@ -51,7 +51,7 @@ const LandingPage = () => {
         )}
       </main>
       
-      <footer className="bg-black text-white py-4">
+      <footer className="bg-[#001845] text-white py-4">
       <div className="container mx-auto text-center">
         <p className="text-sm">© 2024 Spendix. Tutti i diritti riservati.</p>
       </div>

@@ -28,7 +28,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[rgb(4,18,51)] flex items-center justify-center">
+    <div className="min-h-screen bg-[#001845] flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-center">Accedi a Spendix</h2>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
@@ -55,7 +55,7 @@ const LoginPage = () => {
               required
             />
           </div>
-          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+          <button type="submit" className="w-full bg-[#0466C8] text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
             Accedi
           </button>
         </form>
