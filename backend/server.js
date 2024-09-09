@@ -7,6 +7,10 @@ import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import registerRoutes from './routes/register.js';
+import Category from './models/Category.js';
+import Balance from './models/Balance.js';
+import Transaction from './models/Transaction.js'
+import User from './models/User.js';
 
 
 dotenv.config();
@@ -50,6 +54,7 @@ app.use((req, res, next) => {
   next();
 });
 
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -66,9 +71,9 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 
 app.use('/api/auth', authRoutes);
-app.use('/api', userRoutes);
 app.use('/api/',registerRoutes);
 app.use('/api/',userRoutes);
+
 
 
 // Start server

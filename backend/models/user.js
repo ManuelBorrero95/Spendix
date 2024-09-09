@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-const userSchema = new mongoose.Schema({
+
+const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'Please provide an email'],
@@ -27,20 +28,32 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  balance: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Balance'
+  },
+  transactions: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Transaction'
+  }],
+  categories: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
+  }]
 });
 
 // Hash the password before saving
-userSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
 // Method to check if password is correct
-userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
-  return await bcrypt.compare(candidatePassword, userPassword);
+UserSchema.methods.correctPassword = async function(candidatePassword, UserPassword) {
+  return await bcrypt.compare(candidatePassword, UserPassword);
 };
 
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('User', UserSchema);
 
 export default User;

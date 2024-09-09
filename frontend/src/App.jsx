@@ -4,6 +4,7 @@ import LoginPage from './components/LoginPage';
 import Dashboard from './components/Dashboard';
 import RegisterPage from './components/RegisterPage';
 import LandingPage  from './components/LandingPage';
+import 'flowbite/dist/flowbite.min.css';
 
 const App = () => {
   return (

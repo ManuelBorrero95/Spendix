@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../models/user.js';
-
+import User from '../models/User.js';
+import Balance from '../models/Balance.js';
 
 
 const router = express.Router();
@@ -15,11 +15,16 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'L\'utente esiste già' });
     }
 
+    //creo nuovo bilancio a 0
+    const newBalance = new Balance({ currentAmount: 0 });
+    await newBalance.save();
+
     // Crea un nuovo utente
     user = new User({
       name,
       email,
-      password
+      password,
+      Balace: newBalance._id
     });
 
     // Salva l'utente nel database
