@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -12,7 +11,6 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     minlength: 6,
-    // Non è richiesto per l'autenticazione Google
     required: function() { return !this.googleId; }
   },
   name: {
@@ -24,10 +22,6 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     sparse: true
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
   balance: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Balance'
@@ -36,22 +30,20 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Transaction'
   }],
-  categories: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category'
-  }]
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  }
 });
 
-// Hash the password before saving
 UserSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
-// Method to check if password is correct
-UserSchema.methods.correctPassword = async function(candidatePassword, UserPassword) {
-  return await bcrypt.compare(candidatePassword, UserPassword);
+UserSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+  return await bcrypt.compare(candidatePassword, userPassword);
 };
 
 const User = mongoose.model('User', UserSchema);

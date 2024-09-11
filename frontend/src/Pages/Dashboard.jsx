@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { Card, Table, Button, Spinner, Navbar, Dropdown } from 'flowbite-react';
+import { Card, Table, Button, Spinner, Navbar, Dropdown, Modal } from 'flowbite-react';
 import { HiArrowUp, HiArrowDown, HiOutlineLogout, HiPlus, HiMenu, HiUser, HiCash } from 'react-icons/hi';
 import ApexCharts from 'apexcharts';
+import AddTransactionForm from '../components/AddTransactionForm';
 
 const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -14,6 +15,7 @@ const Dashboard = () => {
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showAddTransactionModal, setShowAddTransactionModal] = useState(false);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -132,8 +134,13 @@ const Dashboard = () => {
   };
 
   const handleAddTransaction = () => {
-    // Implementare la logica per aggiungere una nuova transazione
-    console.log('Add transaction clicked');
+    setShowAddTransactionModal(true);
+  };
+
+  const handleTransactionAdded = (newTransaction) => {
+    setTransactions([newTransaction, ...transactions]);
+    setBalance(prevBalance => prevBalance + newTransaction.amount);
+    fetchUserData(); // Refresh all data
   };
 
   if (loading) {
@@ -233,6 +240,15 @@ const Dashboard = () => {
           </Table>
         </Card>
       </div>
+
+      <Modal show={showAddTransactionModal} onClose={() => setShowAddTransactionModal(false)}>
+        <Modal.Body>
+          <AddTransactionForm 
+            onTransactionAdded={handleTransactionAdded}
+            onClose={() => setShowAddTransactionModal(false)}
+          />
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

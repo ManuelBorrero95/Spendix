@@ -4,6 +4,8 @@ import LoginPage from './Pages/LoginPage';
 import Dashboard from './Pages/Dashboard';
 import RegisterPage from './Pages/RegisterPage';
 import LandingPage  from './Pages/LandingPage';
+import ProfilePage from './Pages/ProfilePage';
+import SetInitialBalancePage from './Pages/SetInitialBalancePage';
 import 'flowbite/dist/flowbite.min.css';
 import 'apexcharts/dist/apexcharts.css';
 
@@ -15,6 +17,8 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/set-initial-balance" element={<SetInitialBalancePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

@@ -13,7 +13,7 @@ const CategorySchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['income', 'expense', 'both'],
+    enum: ['Casa', 'Bollette', 'Svago'],
     default: 'both'
   },
   createdBy: {
