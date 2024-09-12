@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { Card, Table, Button, Spinner, Navbar, Dropdown, Modal } from 'flowbite-react';
-import { HiArrowUp, HiArrowDown, HiOutlineLogout, HiPlus, HiMenu, HiUser, HiCash, HiCog } from 'react-icons/hi';
+import { Card, Table, Button, Spinner, Modal } from 'flowbite-react';
+import { HiArrowUp, HiArrowDown, HiPlus } from 'react-icons/hi';
 import ApexCharts from 'apexcharts';
 import AddTransactionForm from '../components/AddTransactionForm';
+import NavbarComponent from '../components/NavbarComponent';
+import FooterComponent from '../components/FooterComponent';
 
 const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -38,35 +40,23 @@ const Dashboard = () => {
         })
       ]);
       
-      console.log('User Response:', userResponse.data);
-      console.log('Categories Response:', categoriesResponse.data);
-      
       setUser(userResponse.data);
       setBalance(userResponse.data.balance?.currentAmount || 0);
       setCategories(categoriesResponse.data);
       
       const transactionsWithCategories = userResponse.data.transactions.map(transaction => {
-        console.log('Processing transaction:', JSON.stringify(transaction, null, 2));
-        
-        // Estrai l'ID della categoria, gestendo sia il caso di oggetto che di stringa
         const categoryId = typeof transaction.category === 'object' && transaction.category !== null
           ? transaction.category._id
           : transaction.category;
-
-        console.log('Extracted Category ID:', categoryId);
         
         const category = categoriesResponse.data.find(cat => cat._id === categoryId);
         
-        console.log('Matched Category:', category ? JSON.stringify(category, null, 2) : 'No match found');
-
         return { 
           ...transaction, 
           category: category ? category.name : 'N/A',
           categoryId: categoryId
         };
       });
-      
-      console.log('Transactions with Categories:', JSON.stringify(transactionsWithCategories, null, 2));
       
       setTransactions(transactionsWithCategories);
     } catch (error) {
@@ -152,7 +142,7 @@ const Dashboard = () => {
 
     const chartElement = document.getElementById("pie-chart");
     if (chartElement && typeof ApexCharts !== 'undefined') {
-      chartElement.innerHTML = ''; // Clear previous chart
+      chartElement.innerHTML = '';
       const chart = new ApexCharts(chartElement, options);
       chart.render();
     }
@@ -193,45 +183,10 @@ const Dashboard = () => {
   const { income, expenses } = getTransactionsSummary();
 
   return (
-    <div className="bg-[#001845] min-h-screen text-black">
-      <Navbar fluid className="bg-[#0353A4]">
-        <Navbar.Brand href="/">
-          <span className="self-center whitespace-nowrap text-xl font-semibold text-white">
-            Finance Dashboard
-          </span>
-        </Navbar.Brand>
-        <div className="flex md:order-2">
-          <Dropdown
-            arrowIcon={false}
-            inline
-            label={<HiMenu className="w-6 h-6 text-white" />}
-          >
-            <Dropdown.Header>
-              <span className="block text-sm">
-                {user?.name}
-              </span>
-              <span className="block truncate text-sm font-medium">
-                {user?.email}
-              </span>
-            </Dropdown.Header>
-            <Dropdown.Item icon={HiUser} onClick={() => navigate('/profile')}>
-              Profilo
-            </Dropdown.Item>
-            <Dropdown.Item icon={HiCash} onClick={() => navigate('/transactions')}>
-              Transazioni
-            </Dropdown.Item>
-            <Dropdown.Item icon={HiCog} onClick={() => navigate('/settings')}>
-              Impostazioni
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item icon={HiOutlineLogout} onClick={handleLogout}>
-              Logout
-            </Dropdown.Item>
-          </Dropdown>
-        </div>
-      </Navbar>
+    <div className="bg-[#001845] min-h-screen flex flex-col text-black">
+      <NavbarComponent user={user} onLogout={handleLogout} />
 
-      <div className="p-4 max-w-5xl mx-auto">
+      <div className="flex-grow p-4 max-w-5xl mx-auto w-full">
         <Card className="bg-white text-black mb-4">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold">Dashboard di {user?.name}</h1>
@@ -266,7 +221,7 @@ const Dashboard = () => {
                 <Table.HeadCell className="bg-[#0353A4] text-white">Importo</Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y divide-gray-200">
-                {transactions.map((transaction) => (
+                {transactions.slice(0, 5).map((transaction) => (
                   <Table.Row key={transaction._id} className="bg-white">
                     <Table.Cell>{new Date(transaction.date).toLocaleDateString()}</Table.Cell>
                     <Table.Cell>{transaction.description}</Table.Cell>
@@ -284,6 +239,8 @@ const Dashboard = () => {
           </div>
         </Card>
       </div>
+
+      <FooterComponent />
 
       <Modal show={showAddTransactionModal} onClose={() => setShowAddTransactionModal(false)}>
         <Modal.Body>

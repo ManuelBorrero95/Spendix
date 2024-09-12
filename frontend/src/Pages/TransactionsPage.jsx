@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Table, Button, Modal, TextInput, Select } from 'flowbite-react';
+import { Table, Button, Modal, TextInput, Select, Spinner } from 'flowbite-react';
 import { HiPencil, HiTrash } from 'react-icons/hi';
+import NavbarComponent from '../components/NavbarComponent';
+import FooterComponent from '../components/FooterComponent';
 
 const BACKEND_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const TransactionsPage = () => {
+  const [user, setUser] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,9 +19,28 @@ const TransactionsPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    fetchUserData();
     fetchTransactions();
     fetchCategories();
   }, []);
+
+  const fetchUserData = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/user`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUser(response.data);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setError('Errore nel caricamento dei dati utente');
+    }
+  };
 
   const fetchTransactions = async () => {
     try {
@@ -80,52 +102,75 @@ const TransactionsPage = () => {
     }
   };
 
-  if (loading) return <div className="text-center mt-8">Caricamento...</div>;
-  if (error) return <div className="text-center mt-8 text-red-500">{error}</div>;
+  const handleLogout = async () => {
+    try {
+      await axios.get(`${BACKEND_URL}/api/auth/logout`);
+    } catch (error) {
+      console.error('Error during logout:', error);
+    } finally {
+      localStorage.removeItem('token');
+      navigate('/');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-[#001845]">
+        <Spinner size="xl" className="text-white" />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#001845] p-4">
-      <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6">
-        <h1 className="text-2xl font-bold mb-4 text-[#0466C8]">Transazioni</h1>
-        <Button onClick={() => navigate('/dashboard')} className="mb-4 bg-[#0466C8]">
-          Torna alla Dashboard
-        </Button>
-        <div className="overflow-x-auto">
-          <Table striped>
-            <Table.Head>
-              <Table.HeadCell>Data</Table.HeadCell>
-              <Table.HeadCell>Descrizione</Table.HeadCell>
-              <Table.HeadCell>Categoria</Table.HeadCell>
-              <Table.HeadCell>Importo</Table.HeadCell>
-              <Table.HeadCell>Tipo</Table.HeadCell>
-              <Table.HeadCell>Azioni</Table.HeadCell>
-            </Table.Head>
-            <Table.Body>
-              {transactions.map((transaction) => (
-                <Table.Row key={transaction._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                  <Table.Cell>{new Date(transaction.date).toLocaleDateString()}</Table.Cell>
-                  <Table.Cell>{transaction.description}</Table.Cell>
-                  <Table.Cell>{transaction.category.name}</Table.Cell>
-                  <Table.Cell>€{Math.abs(transaction.amount).toFixed(2)}</Table.Cell>
-                  <Table.Cell>{transaction.type === 'spesa' ? 'Spesa' : 'Guadagno'}</Table.Cell>
-                  <Table.Cell>
-                    <Button.Group>
-                      <Button color="gray" onClick={() => handleEdit(transaction)}>
-                        <HiPencil className="mr-2 h-5 w-5" />
-                        Modifica
-                      </Button>
-                      <Button color="failure" onClick={() => handleDelete(transaction._id)}>
-                        <HiTrash className="mr-2 h-5 w-5" />
-                        Elimina
-                      </Button>
-                    </Button.Group>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
+    <div className="min-h-screen bg-[#001845] flex flex-col">
+      <NavbarComponent user={user} onLogout={handleLogout} />
+
+      <div className="flex-grow p-4">
+        <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-6">
+          <h1 className="text-2xl font-bold mb-4 text-[#0466C8]">Transazioni</h1>
+          <Button onClick={() => navigate('/dashboard')} className="mb-4 bg-[#0466C8]">
+            Torna alla Dashboard
+          </Button>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          <div className="overflow-x-auto">
+            <Table striped>
+              <Table.Head>
+                <Table.HeadCell>Data</Table.HeadCell>
+                <Table.HeadCell>Descrizione</Table.HeadCell>
+                <Table.HeadCell>Categoria</Table.HeadCell>
+                <Table.HeadCell>Importo</Table.HeadCell>
+                <Table.HeadCell>Tipo</Table.HeadCell>
+                <Table.HeadCell>Azioni</Table.HeadCell>
+              </Table.Head>
+              <Table.Body>
+                {transactions.map((transaction) => (
+                  <Table.Row key={transaction._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                    <Table.Cell>{new Date(transaction.date).toLocaleDateString()}</Table.Cell>
+                    <Table.Cell>{transaction.description}</Table.Cell>
+                    <Table.Cell>{transaction.category.name}</Table.Cell>
+                    <Table.Cell>€{Math.abs(transaction.amount).toFixed(2)}</Table.Cell>
+                    <Table.Cell>{transaction.type === 'spesa' ? 'Spesa' : 'Guadagno'}</Table.Cell>
+                    <Table.Cell>
+                      <Button.Group>
+                        <Button color="gray" onClick={() => handleEdit(transaction)}>
+                          <HiPencil className="mr-2 h-5 w-5" />
+                          Modifica
+                        </Button>
+                        <Button color="failure" onClick={() => handleDelete(transaction._id)}>
+                          <HiTrash className="mr-2 h-5 w-5" />
+                          Elimina
+                        </Button>
+                      </Button.Group>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          </div>
         </div>
       </div>
+
+      <FooterComponent />
 
       <Modal show={showEditModal} onClose={() => setShowEditModal(false)}>
         <Modal.Header>Modifica Transazione</Modal.Header>

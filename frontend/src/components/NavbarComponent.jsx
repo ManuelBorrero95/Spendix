@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar, Dropdown } from 'flowbite-react';
-import { HiMenu, HiUser, HiCash, HiCog, HiOutlineLogout } from 'react-icons/hi';
+import { HiMenu, HiUser, HiCash, HiCog, HiOutlineLogout, HiTemplate, HiViewGrid  } from 'react-icons/hi';
 
 const NavbarComponent = ({ user, onLogout }) => {
   const navigate = useNavigate();
@@ -35,6 +35,9 @@ const NavbarComponent = ({ user, onLogout }) => {
           </Dropdown.Item>
           <Dropdown.Item icon={HiCog} onClick={() => navigate('/settings')}>
             Impostazioni
+          </Dropdown.Item>
+          <Dropdown.Item icon={HiTemplate} onClick={() => navigate('/dashboard')}>
+            Dashboard
           </Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item icon={HiOutlineLogout} onClick={onLogout}>
