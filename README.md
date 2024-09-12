@@ -1,4 +1,4 @@
-Certamente! Ecco il contenuto completo del file README.md pronto per essere committato su Git:
+
 
 ```markdown
 # Spendix: Gestisci le Tue Spese con Stile 💸
