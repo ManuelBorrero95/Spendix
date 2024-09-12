@@ -3,7 +3,7 @@
 
 Benvenuto nel repository di Spendix, l'app che rende il tracciamento delle spese un gioco da ragazzi!
 
-📱 **Versione Live**: https://spendix.vercel.app/ )
+📱 **Versione Live**: https://spendix.vercel.app/
 
 ## 📊 Cos'è Spendix?
 
