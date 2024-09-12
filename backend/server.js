@@ -9,7 +9,9 @@ import userRoutes from './routes/user.js';
 import registerRoutes from './routes/register.js';
 import categoryRoutes  from './routes/categories.js'
 import settingsRoutes from './routes/Settings.js';
+import transactionsRoutes from './routes/transactions.js';
 import balanceCategoryRoutes from './routes/balanceAndCaterory.js'; // Nuova importazione
+
 import Category from './models/Category.js';
 import Balance from './models/Balance.js';
 import Transaction from './models/Transaction.js'
@@ -89,7 +91,7 @@ app.use('/api/',userRoutes);
 app.use('/api/', categoryRoutes);
 app.use('/api/', balanceCategoryRoutes);
 app.use('/api', settingsRoutes);
-
+app.use('/api', transactionsRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

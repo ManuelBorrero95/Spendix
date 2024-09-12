@@ -6,6 +6,7 @@ import RegisterPage from './Pages/RegisterPage';
 import LandingPage  from './Pages/LandingPage';
 import ProfilePage from './Pages/ProfilePage';
 import Settings from './Pages/Settings';
+import Transactions from './Pages/TransactionsPage';
 import SetInitialBalancePage from './Pages/SetInitialBalancePage';
 import 'flowbite/dist/flowbite.min.css';
 import 'apexcharts/dist/apexcharts.css';
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/Settings" element={<Settings />} />
         <Route path="/set-initial-balance" element={<SetInitialBalancePage />} />
+        <Route path="/Transactions" element={<Transactions />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
