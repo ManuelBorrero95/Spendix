@@ -8,7 +8,7 @@ import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import registerRoutes from './routes/register.js';
 import categoryRoutes  from './routes/categories.js'
-import settingsRoutes from './routes/Settings.js';
+import settingsRoutes from './routes/settings.js';
 import transactionsRoutes from './routes/transactions.js';
 import balanceCategoryRoutes from './routes/balanceAndCaterory.js'; // Nuova importazione
 
