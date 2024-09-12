@@ -7,11 +7,15 @@ import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import registerRoutes from './routes/register.js';
+import categoryRoutes  from './routes/categories.js'
+import settingsRoutes from './routes/Settings.js';
+import balanceCategoryRoutes from './routes/balanceAndCaterory.js'; // Nuova importazione
 import Category from './models/Category.js';
 import Balance from './models/Balance.js';
 import Transaction from './models/Transaction.js'
-//import User from './models/User.js'; 
 import User from './models/User.js';
+
+import { createDefaultCategories } from './models/Category.js';
 
 
 dotenv.config();
@@ -66,15 +70,25 @@ app.use(passport.session());
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .then(async () => {
+    console.log('Successfully connected to MongoDB');
+    console.log('Creating default categories...');
+    await createDefaultCategories();
+    console.log('Finished creating default categories');
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1); // Exit the process if we can't connect to the database
+  });
 
 // Routes
 
 app.use('/api/auth', authRoutes);
 app.use('/api/',registerRoutes);
 app.use('/api/',userRoutes);
-
+app.use('/api/', categoryRoutes);
+app.use('/api/', balanceCategoryRoutes);
+app.use('/api', settingsRoutes);
 
 
 // Start server

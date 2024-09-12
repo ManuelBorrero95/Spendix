@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import Balance from '../models/Balance.js';
 
-
 const router = express.Router();
+
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -15,19 +15,25 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'L\'utente esiste già' });
     }
 
-    //creo nuovo bilancio a 0
-    const newBalance = new Balance({ currentAmount: 0 });
-    await newBalance.save();
-
     // Crea un nuovo utente
     user = new User({
       name,
       email,
-      password,
-      Balace: newBalance._id
+      password
     });
 
     // Salva l'utente nel database
+    await user.save();
+
+    // Crea un nuovo bilancio associato all'utente
+    const newBalance = new Balance({ 
+      currentAmount: 0,
+      user: user._id  // Associa il bilancio all'utente
+    });
+    await newBalance.save();
+
+    // Aggiorna l'utente con il riferimento al bilancio
+    user.balance = newBalance._id;
     await user.save();
 
     // Crea e invia il token JWT

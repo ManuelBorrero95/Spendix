@@ -2,6 +2,7 @@ import express from 'express';
 import User from '../models/User.js';
 import Transaction from '../models/Transaction.js';
 import Balance from '../models/Balance.js';
+import Category from '../models/Category.js';
 import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -36,7 +37,6 @@ router.post('/set-initial-balance', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Errore del server' });
   }
 });
-
 
 // Route per ottenere i dati dell'utente per la dashboard
 router.get('/user', authenticateToken, async (req, res) => {
@@ -73,16 +73,21 @@ router.post('/transactions', authenticateToken, async (req, res) => {
     const userId = req.user.id;
 
     const user = await User.findById(userId).populate('balance');
-    console.log(user);
     if (!user) {
       return res.status(404).json({ message: 'Utente non trovato' });
     }
 
+    // Verifica se la categoria esiste
+    let categoryDoc = await Category.findById(category);
+    if (!categoryDoc) {
+      return res.status(400).json({ message: 'Categoria non valida' });
+    }
+
     const newTransaction = new Transaction({
-      amount: type === 'expense' ? -Math.abs(amount) : Math.abs(amount),
+      amount: type === 'spesa' ? -Math.abs(amount) : Math.abs(amount),
       description,
       type,
-      category,
+      category: categoryDoc._id,
       user: userId,
       balance: user.balance._id
     });
@@ -97,11 +102,15 @@ router.post('/transactions', authenticateToken, async (req, res) => {
     user.transactions.push(newTransaction._id);
     await user.save();
 
+    // Popola la categoria nella risposta
+    await newTransaction.populate('category');
+
     res.status(201).json(newTransaction);
   } catch (error) {
     console.error('Errore nell\'aggiunta della transazione:', error);
     res.status(500).json({ message: 'Errore del server' });
   }
 });
+
 
 export default router;

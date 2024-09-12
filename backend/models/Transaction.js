@@ -17,10 +17,11 @@ const TransactionSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ['income', 'expense']
+    enum: ['guadagno', 'spesa']
   },
   category: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
     required: true
   },
   user: {
