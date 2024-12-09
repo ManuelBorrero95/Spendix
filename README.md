@@ -5,7 +5,7 @@ Benvenuto nel repository di Spendix, l'app che rende il tracciamento delle spese
 
 📱 **Versione Live**: https://spendix.vercel.app/
 
-## 📊 Cos'è Spendix?
+## 📊 Cos'è Spendix? 
 
 Spendix è un'applicazione intuitiva per la gestione delle spese personali. Ti aiuta a tenere traccia delle tue finanze in modo semplice e divertente.
 
